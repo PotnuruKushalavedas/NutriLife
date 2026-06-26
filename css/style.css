@@ -28,6 +28,7 @@
 
   --accent-primary: #c4704a;
   --accent-secondary: var(--warm-terracotta);
+  --accent-terra: #D98C5F;
   --accent-coral: #d48989;
 
   --border-color: rgba(196, 112, 74, 0.2);
@@ -327,6 +328,13 @@ p:last-child { margin-bottom: 0; }
 
 .logo:hover { color: var(--accent-primary); }
 
+.logo span {
+  display: inline;
+  margin: 0;
+  padding: 0;
+  color: var(--accent-terra);
+}
+
 .logo-icon {
   width: 1.75rem;
   height: 1.75rem;
@@ -541,10 +549,7 @@ p:last-child { margin-bottom: 0; }
 .hero-title { margin-bottom: 1.25rem; }
 
 .hero-title span {
-  background: linear-gradient(135deg, var(--soft-peach), var(--warm-terracotta));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--accent-terra);
 }
 
 .hero-desc {
@@ -887,10 +892,24 @@ p:last-child { margin-bottom: 0; }
   align-items: start;
 }
 
+.about-nutrition-layout {
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
 .about-intro {
   padding: 2.5rem;
 }
 
+.about-nutrition-layout .about-intro {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(280px, 0.8fr);
+  gap: 2rem;
+  align-items: center;
+  padding: 2rem 2.25rem;
+}
+
+.about-intro h2,
 .about-intro h3 { margin-bottom: 1rem; }
 
 .about-list {
@@ -915,13 +934,32 @@ p:last-child { margin-bottom: 0; }
   font-weight: 700;
 }
 
+.about-nutrition-layout .about-list {
+  margin-top: 0;
+}
+
+.about-carousel {
+  overflow: hidden;
+  width: 100%;
+  padding: 0.25rem 0.15rem 0.5rem;
+}
+
 .about-cards {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.25rem;
+  --about-card-gap: 1.25rem;
+  --about-cards-visible: 4;
+  display: flex;
+  gap: var(--about-card-gap);
+  will-change: transform, opacity;
+}
+
+.about-cards.is-sliding {
+  opacity: 0.72;
+  transform: translateX(calc(-1 * ((100% - (var(--about-cards-visible) - 1) * var(--about-card-gap)) / var(--about-cards-visible) + var(--about-card-gap))));
+  transition: transform 760ms cubic-bezier(0.4, 0, 0.2, 1), opacity 760ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .about-card {
+  flex: 0 0 calc((100% - (var(--about-cards-visible) - 1) * var(--about-card-gap)) / var(--about-cards-visible));
   padding: 1.75rem;
 }
 
@@ -1795,6 +1833,8 @@ p:last-child { margin-bottom: 0; }
   .stats-grid { grid-template-columns: repeat(2, 1fr); }
   .footer-grid { grid-template-columns: 1fr 1fr; }
   .home-highlight { grid-template-columns: 1fr; }
+  .about-nutrition-layout .about-intro { grid-template-columns: 1fr; }
+  .about-cards { --about-cards-visible: 3; }
 }
 
 /* ---------- Responsive: Tablet (768px) ---------- */
@@ -1854,7 +1894,7 @@ p:last-child { margin-bottom: 0; }
   .hero-visual { order: -1; }
   .hero-plate { padding: 1rem; }
 
-  .about-cards { grid-template-columns: 1fr; }
+  .about-cards { --about-cards-visible: 2; }
   .age-explorer-cards { grid-template-columns: repeat(2, 1fr); }
   .age-tabs { gap: 0.5rem; }
   .age-req-grid { grid-template-columns: 1fr; }
@@ -1872,6 +1912,8 @@ p:last-child { margin-bottom: 0; }
   .hero-cta .btn { width: 100%; }
 
   .stats-grid { grid-template-columns: 1fr; }
+  .about-cards { --about-cards-visible: 1; }
+  .about-nutrition-layout .about-intro { padding: 1.75rem; }
   .age-explorer-cards { grid-template-columns: 1fr; }
   .age-tab { flex: 1 1 100%; }
   .age-panel { padding: 1.5rem; }

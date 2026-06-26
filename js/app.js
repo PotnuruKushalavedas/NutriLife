@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initNavigation();
   initScrollReveal();
   initScrollToTop();
+  initAboutCarousel();
   initAgeGroups();
   initFoodLibrary();
 });
@@ -135,6 +136,61 @@ function initScrollReveal() {
 /* ============================================================
    AGE GROUP TABS — age-groups.html
    ============================================================ */
+/* ============================================================
+   ABOUT PAGE - Automatic nutrition card carousel
+   ============================================================ */
+function initAboutCarousel() {
+  const track = document.querySelector(".about-carousel .about-cards");
+  if (!track) return;
+
+  const preferredOrder = [
+    "Macronutrients",
+    "Micronutrients",
+    "Hydration",
+    "Dietary Balance",
+    "Growth & Tissue Repair",
+    "Heart Health",
+    "Brain Development & Function",
+    "Bone Health"
+  ];
+
+  const cards = Array.from(track.children);
+  const orderedCards = preferredOrder
+    .map(title => cards.find(card => card.querySelector("h3")?.textContent.trim() === title))
+    .filter(Boolean);
+  const remainingCards = cards.filter(card => !orderedCards.includes(card));
+
+  [...orderedCards, ...remainingCards].forEach(card => {
+    card.classList.add("active");
+    track.appendChild(card);
+  });
+
+  let isSliding = false;
+
+  const rotateCards = () => {
+    if (isSliding || track.children.length < 2) return;
+    isSliding = true;
+    const firstCard = track.firstElementChild;
+
+    track.classList.add("is-sliding");
+
+    const finishSlide = (event) => {
+      if (event.propertyName !== "transform") return;
+      track.removeEventListener("transitionend", finishSlide);
+      track.style.transition = "none";
+      track.appendChild(firstCard);
+      track.classList.remove("is-sliding");
+      track.offsetHeight;
+      track.style.transition = "";
+      isSliding = false;
+    };
+
+    track.addEventListener("transitionend", finishSlide);
+  };
+
+  setInterval(rotateCards, 3800);
+}
+
 function initAgeGroups() {
   const tabs = document.querySelectorAll(".age-explorer-card, .age-tab");
   const panel = document.getElementById("age-panel");

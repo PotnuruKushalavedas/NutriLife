@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initScrollReveal();
   initScrollToTop();
   initAboutCarousel();
+  initHomeSurveyCarousel();
   initAgeGroups();
   initFoodLibrary();
 });
@@ -189,6 +190,44 @@ function initAboutCarousel() {
   };
 
   setInterval(rotateCards, 3800);
+}
+
+/* ============================================================
+   HOME PAGE - Automatic community survey carousel
+   ============================================================ */
+function initHomeSurveyCarousel() {
+  const track = document.querySelector(".survey-carousel .survey-track");
+  if (!track) return;
+
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  if (reduceMotion.matches) return;
+
+  let isSliding = false;
+
+  const rotateCards = () => {
+    if (isSliding || document.hidden || track.children.length < 2) return;
+    isSliding = true;
+    const firstCard = track.firstElementChild;
+
+    requestAnimationFrame(() => {
+      track.classList.add("is-sliding");
+    });
+
+    const finishSlide = (event) => {
+      if (event.propertyName !== "transform") return;
+      track.removeEventListener("transitionend", finishSlide);
+      track.style.transition = "none";
+      track.appendChild(firstCard);
+      track.classList.remove("is-sliding");
+      track.offsetHeight;
+      track.style.transition = "";
+      isSliding = false;
+    };
+
+    track.addEventListener("transitionend", finishSlide);
+  };
+
+  setInterval(rotateCards, 4000);
 }
 
 function initAgeGroups() {
